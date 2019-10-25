@@ -1,68 +1,57 @@
-# Calculate Net Working Capital for next 2 months, variable percentages are coming externally
+# Calculate Net Working Capital for next month
+# Growth percentages are given externally
 #
-# 1 Start values
-# 2 Variable percentages
-# 3 Calculates NWC for next month
+# 1 Define function
+# 2 Enter NWC values and calculate NWC
+# 3 Enter growth percentages, calculate new NWC and show the growth percentages
+# 4 Give verbal feedback
+#
 # Variables and signs:
-#   nwc = net working capital (+/-) = inv + ar - ap
+#   nwc = net working capital (+/-) (= inv + ar - ap)
 #   inv = inventory (+)
 #   ar = accounts receivable (+)
 #   ap = accounts payable (-)
 
-# create variables
-# nwc_fcst = 0
+# 1 defining nwc_calc function
+# this function is also used to calculate NWC after setting the growth percentages
+# if the growth percentage is not defined, then it will be 1 -> given input value will not change
+# e.g. AR 2 * 1 (when no growth) = 2
 
-# inv = 0
-# ar = 0
-# ap = 0
 
-# inv_var = 0
-# ap_var = 0
-# ar_var = 0
+def nwc_calc(inv, ar, ap, inv_growth=1.0, ar_growth=1.0, ap_growth=1.0):
+    """Function is calculating NWC and new NWC"""
+    nwc = (inv * (1 + (inv_growth / 100))) + (ar * (1 + (ar_growth / 100))) - (ap * (1 + (ap_growth / 100)))
+    return nwc
 
-# 1 ask user to set the starting values
-inv_start = input ("Enter the current value of the inventory (in absolute value): ")
-inv_value = int(inv_start)
 
-ar_start = input ("Enter the current value of the accounts receivable (in absolute value): ")
-ar_value = int(ar_start)
+# 2 ask user to enter the inv, ar and ap values (can be positive or negative) and print inv, ar, ap and nwc as float
+inv_1 = float(input("Enter the current value of the inventory: "))
+ar_1 = float(input("Enter the current value of the accounts receivable: "))
+ap_1 = float(input("Enter the current value of the accounts payable: "))
+nwc_begin = nwc_calc(inv_1,ar_1,ap_1)
 
-ap_start = input ("Enter the current value of the accounts payable (in absolute value): ")
-ap_value = int(ap_start)
+print ("Your current inventory is {0}, accounts receivable {1} and accounts payable {2}".format(str(inv_1), str(ar_1),
+                                                                                                str(ap_1)))
+print ("Your current net working capital is {}".format(str(nwc_begin)))
 
-nwc_start = inv_start + ar_start - ap_start
+# 3 ask user to enter growth percentages for next month without % sign, print new nwc and growth percentages
 
-print ("Your current inventory is: " + str(inv_value))
-print ("Your current accounts receivable is: " + str(ar_value))
-print ("Your current accounts payable is: " + str(ap_value))
-print ("Your current net working capital is: " + str(nwc_start))
+inv_var = float(input("Enter the next month inventory growth percentage without % sign (e.g. -1 or 4): "))
+ar_var = float(input("Enter the next month accounts receivable growth percentage without % sign (e.g. -1 or 4): "))
+ap_var = float(input("Enter the next month accounts payable growth percentage without % sign (e.g. -1 or 4): "))
+nwc_forecast = nwc_calc(inv_1,ar_1,ap_1,inv_var, ar_var, ap_var)
 
-# 2 enter the percentage changes for first and second month for every variable
-inv_variable = input ("Enter the inventory growth percentage without % sign (e.g. -1 or 4): ")
-inv_var = int(inv_variable)
+print ("Your next month net working capital will be {}".format(str(nwc_forecast)))
 
-ar_variable = input ("Enter the accounts receivable growth percentage without % sign (e.g. -1 or 4): ")
-ar_var = int(ar_variable)
+print ("Inventory will have {0} %, accounts receivable {1} % and accounts payable {2} % growth in next month.".format(
+                                                                                                        str(inv_var),
+                                                                                                        str(ar_var),
+                                                                                                        str(ap_var)))
+# 4 give feedback to user
 
-ap_variable= input ("Enter the accounts payable growth percentage without % sign (e.g. -1 or 4): ")
-ap_var = int(ap_variable)
-
-# 3 calculate and print the nwc and show the percentage change of nwc per month
-inv_fcst = (inv_value * (1+(inv_var/100)))
-ar_fcst = (ar_value * (1+(ar_var/100)))
-ap_fcst = (ap_value * (1 + (ap_var / 100)))
-
-nwc_fcst = inv_fcst + ar_fcst - ap_fcst
-
-inv_growth = ((inv_fcst - inv_value) / inv_value) * 100
-ar_growth = ((ar_fcst - ar_value) / ar_value) * 100
-ap_growth = ((ap_fcst - ap_value) / ap_value) * 100
-
-print("Growth percentages for inventory " + str(inv_growth) + "% , accounts receivable " + str(ar_growth) + "% and accounts payable " +  str(ap_growth) + "%")
-print("Your next month calculated net working capital will be: " + str(nwc_fcst))
-if nwc_fcst < 0:
+if nwc_forecast < 0:
     print("Good luck with that!")
-if 0 < nwc_fcst < 100:
+if 0 < nwc_forecast < 100:
     print("Getting there, keep on going!")
-if nwc_fcst > 100:
+if nwc_forecast > 100:
     print("Great job!")
